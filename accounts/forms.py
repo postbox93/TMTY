@@ -2,7 +2,7 @@
 from django import forms
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.contrib.auth.forms import UserCreationForm
-from .models import User
+from .models import User,Profile
 
 
 class RegisterForm(forms.ModelForm):
@@ -34,6 +34,39 @@ class SignUpForm(UserCreationForm):
     class Meta:
         model = User
         fields = ('email',)
+
+
+
+
+class Basic_details(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['name' ,'date_of_birth', 'religion', 'mother_tongue' ]
+
+
+class Religion_details(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['caste', 'gothram', 'dosham']
+
+class Personal_details(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = [ 'marital_status', 'height', 'family_status', 'family_type', 'family_values',
+         'any_diability',]
+
+class About_you(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['about_you']
+
+
+
+
+
+
+
+
 # class UserAdminCreationForm(forms.ModelForm):
 #     """
 #     A form for creating new users. Includes all the required
@@ -79,3 +112,4 @@ class SignUpForm(UserCreationForm):
 #         # This is done here, rather than on the field, because the
 #         # field does not have access to the initial value
 #         return self.initial["password"]
+

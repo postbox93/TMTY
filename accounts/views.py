@@ -5,11 +5,12 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
 from django.views.generic.detail import DetailView
 
-from .forms import RegisterForm,SignUpForm
-
+from .forms import RegisterForm,SignUpForm,Basic_details,Religion_details,Personal_details,About_you
+from formtools.wizard.views import SessionWizardView
+from .models import Profile
 
 class UserView(DetailView):
-    template_name = 'accounts/profile.html'
+    template_name = 'accounts/home.html'
 
     def get_object(self):
         print(self.request.user)
@@ -27,11 +28,32 @@ def signup(request):
                 login(request, user)
             else:
                 print("user is not authenticated")
-            return redirect('profile')
+            return redirect('home')
     else:
         form = SignUpForm()
     return render(request, 'accounts/signup.html', {'form': form})
 
+
+class ProfileView(SessionWizardView):
+    template_name = "accounts/profile.html"
+    model = Profile
+    form_list = [Basic_details,Religion_details,Personal_details,About_you]
+    def done(self, form_list, form_dict,**kwargs):
+        # print("*************************************",form_dict)
+        # # form_list.save()
+        # add_data=Profile(**form_dict)
+        # add_data.save()
+        # return render(self.request, 'accounts/success.html', {
+        #     'form_data': [form.cleaned_data for form in form_list],
+        # })
+        form_data = [form.cleaned_data for form in form_list]
+        data_dict={}
+        for item in form_data:
+            data_dict.update(item)
+        # data_dict.update({'user':CustomUser.objects.get(email=self.request.user)})
+        add_data=Profile(**data_dict)
+        add_data.save()
+        return render(self.request, 'accounts/success.html',locals())
 
 
 # class Login(object):
